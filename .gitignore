@@ -1,2 +1,9 @@
 .npmrc
 node_modules
+bin
+eggs
+develop-eggs
+parts
+*.egg-info
+*.pyc
+.installed.cfg

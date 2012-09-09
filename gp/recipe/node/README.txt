@@ -16,6 +16,10 @@ url
 npms
     a list of package to install with npm
 
+binary
+    path to the binary installation of node. This is useful on systems
+    where node can't be compiled from source.
+
 scripts
     a list of scripts
 

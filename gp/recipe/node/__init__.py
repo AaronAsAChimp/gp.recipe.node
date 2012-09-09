@@ -48,11 +48,9 @@ class Recipe(object):
         if npms:
             npms = ' '.join([npm.strip() for npm in npms.split() \
                                                             if npm.strip()])
-            p = subprocess.Popen(('export HOME=%(node_dir)s;'
-                               'export PATH=%(node_bin)s:$PATH;'
-                               'echo "prefix=$HOME" > $HOME/.npmrc;'
-                               '%(node_bin)s/npm install -g %(npms)s'
-                              ) % locals(), shell=True)
+
+            p = subprocess.Popen(('"%(node_bin)s/npm" install %(npms)s -g --prefix %(node_dir)s') % locals(),
+                shell=True)
             p.wait()
 
             for script in scripts:
@@ -80,13 +78,14 @@ class Recipe(object):
                         'import os;\nos.environ["NODE_PATH"] = %r' % node_path
 
         options['eggs'] = 'gp.recipe.node'
-        options['arguments'] = '%r, (%r, %r), sys.argv[0]' % (
+        options['arguments'] = '%r, (%r, %r, %r)' % (
                                 node_binary,
-                                os.path.join(node_dir, 'bin'),
+                                os.path.join(node_dir, 'bin'),  # for unix
+                                node_dir,  # for windows
                                 node_bin,
                              )
         options['entry-points'] = '\n'.join([
-            '%s=gp.recipe.node.script:main' % s for s in scripts
+            '%s=gp.recipe.node.script:node_script_runner.%s' % (s, s) for s in scripts
             ])
         from zc.recipe.egg import Scripts
         rscripts = Scripts(self.buildout, self.name, options)
