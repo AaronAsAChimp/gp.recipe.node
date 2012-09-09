@@ -7,10 +7,12 @@ import os
 class Recipe(object):
     """zc.buildout recipe"""
 
+    node_version = '0.8.8'
+
     def __init__(self, buildout, name, options):
         self.buildout, self.name, self.options = buildout, name, options
         if 'url' not in options:
-            options['url'] = 'http://nodejs.org/dist/node-v0.4.12.tar.gz'
+            options['url'] = 'http://nodejs.org/dist/v%s/node-v%s.tar.gz' % (self.node_version, self.node_version)
 
     def install(self):
         """Installer"""
